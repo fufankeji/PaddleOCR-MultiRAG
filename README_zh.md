@@ -35,8 +35,11 @@
 - 在线预览图文布局识别结果
 
 ## 👀 项目演示
-<video src="./assets/演示视频.mp4" autoplay="true" controls="controls"  height="500">
-</video>
+
+
+https://github.com/user-attachments/assets/1bae045a-0278-4c11-8c66-b98e37c9bd39
+
+
 
 ## 🚀 使用指南
 
