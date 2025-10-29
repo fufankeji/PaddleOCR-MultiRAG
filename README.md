@@ -36,8 +36,11 @@ The system can efficiently process PDF and image files, with powerful OCR capabi
 
 ## 👀 Project Demo
 
-<video src="./assets/演示视频.mp4" autoplay="true" controls="controls"  height="500">
-</video>
+
+
+https://github.com/user-attachments/assets/6afeeb03-1676-4907-99c6-80fd5b7fedd9
+
+
 
 ## 🚀 Usage Guide
 
