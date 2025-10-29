@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .section {
+            background: #252538;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #4A00E0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #6a1fe0;
+        }
+        pre {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .stats-card {
+            display: inline-block;
+            background: rgba(74, 0, 224, 0.1);
+            border: 1px solid #4A00E0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 150px;
+        }
+        .stats-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00D9FF;
+        }
+        .stats-label {
+            color: #aaa;
+            margin-top: 5px;
+        }
+        input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background: #1a1a2e;
+            color: white;
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 API测试页面</h1>
+
+    <!-- 已索引文档测试 -->
+    <div class="section">
+        <h2>1. 测试已索引文档</h2>
+        <p>文档ID: <code id="doc-id">fee551f0-e8ad-4959-9a8f-541ef6f74f48</code></p>
+        <button onclick="testProgress()">测试进度API</button>
+        <div id="progress-result"></div>
+    </div>
+
+    <!-- 统计卡片渲染 -->
+    <div class="section">
+        <h2>2. 统计数据渲染</h2>
+        <div id="stats-cards"></div>
+    </div>
+
+    <!-- 查询测试 -->
+    <div class="section">
+        <h2>3. 测试查询API</h2>
+        <input type="text" id="query-input" placeholder="输入问题..." value="这个文档主要讲什么内容？">
+        <button onclick="testQuery()">发送查询</button>
+        <div id="query-result"></div>
+    </div>
+
+    <!-- 健康检查 -->
+    <div class="section">
+        <h2>4. 后端健康检查</h2>
+        <button onclick="testHealth()">检查后端</button>
+        <div id="health-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        const DOC_ID = 'fee551f0-e8ad-4959-9a8f-541ef6f74f48';
+
+        async function testHealth() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.innerHTML = '<p>正在检查...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <p style="color: #0f0">✅ 后端运行正常</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: #f00">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        async function testProgress() {
+            const resultDiv = document.getElementById('progress-result');
+            const statsDiv = document.getElementById('stats-cards');
+            resultDiv.innerHTML = '<p>正在获取进度...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/progress/${DOC_ID}`);
+                const data = await response.json();
+
+                resultDiv.innerHTML = `
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <p style="color: #0f0">✅ 获取成功</p>
+                `;
+
+                // 渲染统计卡片
+                if (data.stats) {
+                    statsDiv.innerHTML = `
+                        <div class="stats-card">
+                            <div class="stats-number">${data.stats.text_blocks}</div>
+                            <div class="stats-label">文本块</div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-number">${data.stats.table_blocks}</div>
+                            <div class="stats-label">表格</div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-number">${data.stats.image_blocks}</div>
+                            <div class="stats-label">图像</div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-number">${data.stats.formula_blocks}</div>
+                            <div class="stats-label">公式</div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-number">${data.stats.total_blocks}</div>
+                            <div class="stats-label">总计</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: #f00">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        async function testQuery() {
+            const query = document.getElementById('query-input').value;
+            const resultDiv = document.getElementById('query-result');
+            resultDiv.innerHTML = '<p>正在查询...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        doc_id: DOC_ID,
+                        query: query
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h3>AI回答:</h3>
+                        <div style="background: #1a1a2e; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                            ${data.answer}
+                        </div>
+                        <h4>引用:</h4>
+                        <pre>${JSON.stringify(data.citations, null, 2)}</pre>
+                        <p style="color: #0f0">✅ 查询成功</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                        <p style="color: #ff0">⚠️ API返回错误</p>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: #f00">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        // 页面加载时自动测试
+        window.onload = () => {
+            testHealth();
+            testProgress();
+        };
+    </script>
+</body>
+</html>

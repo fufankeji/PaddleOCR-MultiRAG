@@ -1,0 +1,26 @@
+# FastAPI 和服务器
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+python-multipart==0.0.9
+python-dotenv==1.0.1
+pysqlite3-binary==0.5.4
+
+# 阿里云百炼
+dashscope==1.19.0
+
+# 向量数据库
+chromadb==0.4.22
+
+# LangChain
+langchain==0.1.7
+langchain-community==0.0.20
+
+# 文档处理
+PyPDF2==3.0.1
+Pillow==10.2.0
+python-magic==0.4.27
+
+# 工具库
+pydantic==2.6.1
+pydantic-settings==2.1.0
+aiofiles==23.2.1
