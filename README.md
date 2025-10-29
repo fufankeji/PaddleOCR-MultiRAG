@@ -36,7 +36,7 @@ The system can efficiently process PDF and image files, with powerful OCR capabi
 
 ## 👀 Project Demo
 
-![Demo Video](assets/演示视频.mp4)
+![Demo Video](assets/演示视频.gif)
 
 ## 🚀 Usage Guide
 
@@ -67,10 +67,10 @@ Ensure the following software is installed on your system:
 
 ```bash
 # Create Conda virtual environment
-conda create -n ocr_rag1 python=3.11 -y
+conda create -n ocr_rag python=3.11 -y
 
 # Activate environment
-conda activate ocr_rag1
+conda activate ocr_rag
 ```
 
 ##### 3. Install PaddlePaddle and OCR Dependencies
