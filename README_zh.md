@@ -35,8 +35,8 @@
 - 在线预览图文布局识别结果
 
 ## 👀 项目演示
-
-![演示视频](assets/演示视频.gif)
+<video src="./assets/演示视频.mp4" autoplay="true" controls="controls"  height="500">
+</video>
 
 ## 🚀 使用指南
 
